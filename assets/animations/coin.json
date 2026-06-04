@@ -1,0 +1,5 @@
+{
+  "placeholder": true,
+  "name": "coin",
+  "note": "Replace with a real Lottie coin.json if you add a Lottie player, or add assets/animations/coin.gif for the built-in GIF loader."
+}

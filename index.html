@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#ff6aa2" />
+    <meta name="description" content="IELTS GOGOGO study quest PWA" />
+    <title>IELTS GOGOGO</title>
+    <link rel="manifest" href="manifest.json" />
+    <link rel="icon" href="assets/icons/icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="assets/icons/icon-192.png" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="top-bar">
+        <div>
+          <p class="kicker">今日不是空白</p>
+          <h1>IELTS GOGOGO</h1>
+        </div>
+        <div class="score-pill" aria-label="今日 Combo">
+          <span>Combo</span>
+          <strong id="comboMini">x0</strong>
+        </div>
+      </header>
+
+      <section id="petPanel" class="pet-panel" aria-label="小角色状态">
+        <div id="petAvatar" class="pet-avatar" aria-hidden="true">GO</div>
+        <div class="pet-copy">
+          <p class="stage-label">BUDDY</p>
+          <strong id="petStatus">待命中</strong>
+        </div>
+      </section>
+
+      <section id="homeView" class="view is-active" aria-label="今日任务">
+        <div class="hero-zone">
+          <div class="burst-mark" aria-hidden="true">
+            <span></span><span></span><span></span><span></span>
+          </div>
+          <div class="hero-copy">
+            <p class="stage-label">TODAY QUEST</p>
+            <h2>按顺序通关</h2>
+            <p>单词、阅读、写作、听力、复盘。打完一关，马上下一关。</p>
+          </div>
+        </div>
+
+        <section class="task-editor" aria-label="今日任务管理">
+          <div class="section-head">
+            <div>
+              <p class="stage-label">TASK SETUP</p>
+              <h2>今日顺序</h2>
+            </div>
+            <label class="sound-toggle">
+              <input id="soundToggle" type="checkbox" checked />
+              <span id="soundLabel">Sound On</span>
+            </label>
+          </div>
+          <div class="add-task-row">
+            <input id="newTaskInput" type="text" maxlength="12" placeholder="添加任务，例如 口语" />
+            <button id="addTaskBtn" class="mini-btn mini-btn-primary">添加</button>
+          </div>
+          <p id="editHint" class="edit-hint">开始计时前可调整顺序、添加或删除。</p>
+        </section>
+
+        <div class="task-list" id="taskList"></div>
+
+        <div class="home-actions">
+          <button id="startBtn" class="btn btn-primary">开始任务</button>
+          <button id="resetBtn" class="btn btn-ghost">今天重开</button>
+        </div>
+
+        <section class="record-panel" aria-label="每日记录">
+          <div class="section-head">
+            <div>
+              <p class="stage-label">CHECK-IN</p>
+              <h2>最近 30 天</h2>
+            </div>
+            <span id="streakText" class="small-note">0 天点亮</span>
+          </div>
+          <div id="dayGrid" class="day-grid"></div>
+        </section>
+      </section>
+
+      <section id="prepView" class="view" aria-label="赛前准备">
+        <div class="prep-card">
+          <p class="stage-label">READY CHECK</p>
+          <h2 id="prepTaskName">单词</h2>
+          <p class="prep-line">三项确认，开打计时。</p>
+
+          <div class="checklist" id="prepChecklist">
+            <label class="check-item">
+              <input type="checkbox" />
+              <span class="fake-check" aria-hidden="true"></span>
+              <strong>已关闭手机 / 开启专注模式</strong>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" />
+              <span class="fake-check" aria-hidden="true"></span>
+              <strong>已打开任务材料</strong>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" />
+              <span class="fake-check" aria-hidden="true"></span>
+              <strong>环境 CLEAR，已准备纸笔或水</strong>
+            </label>
+          </div>
+
+          <div class="prep-actions">
+            <button id="prepBackBtn" class="btn btn-ghost">返回</button>
+            <button id="prepGoBtn" class="btn btn-primary" disabled>GOGOGO 开始计时</button>
+          </div>
+          <p id="readyMessage" class="ready-message" aria-live="polite"></p>
+        </div>
+      </section>
+
+      <section id="focusView" class="view" aria-label="任务进行中">
+        <div class="focus-card">
+          <p class="stage-label">NOW FIGHTING</p>
+          <h2 id="currentTaskName">单词</h2>
+          <div id="timerDisplay" class="timer">00:00</div>
+          <div class="focus-status" id="focusStatus">计时中</div>
+          <div class="focus-actions">
+            <button id="pauseBtn" class="btn btn-secondary">暂停</button>
+            <button id="completeBtn" class="btn btn-primary">完成</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="clearView" class="view clear-view" aria-label="完成庆祝">
+        <div class="clear-stage">
+          <div class="shock-ring" aria-hidden="true"></div>
+          <h2 class="clear-text">CLEAR</h2>
+          <p id="comboText" class="combo-text">Combo x1</p>
+          <p id="clearSubtext" class="clear-subtext">这一关拿下</p>
+          <button id="nextBtn" class="btn btn-primary">GOGOGO 下一个任务</button>
+        </div>
+      </section>
+
+      <section id="summaryView" class="view" aria-label="今日结算">
+        <div class="settlement victory-stage">
+          <div class="victory-bg" aria-hidden="true">
+            <span class="beam beam-one"></span>
+            <span class="beam beam-two"></span>
+            <span class="beam beam-three"></span>
+            <div id="dropLayer" class="drop-layer"></div>
+          </div>
+
+          <div class="victory-phase phase-title">
+            <p class="stage-label">DAILY CLEAR</p>
+            <h2 class="victory-title">VICTORY!</h2>
+            <p class="victory-subtitle">IELTS COMBO CLEAR!</p>
+          </div>
+
+          <div class="victory-phase phase-metrics">
+            <div class="summary-metrics game-metrics">
+              <div>
+                <span>任务 CLEAR</span>
+                <strong id="doneCount">0/5</strong>
+              </div>
+              <div>
+                <span>总用时</span>
+                <strong id="totalTime">00:00</strong>
+              </div>
+              <div>
+                <span>Combo</span>
+                <strong id="summaryCombo">x0</strong>
+              </div>
+              <div>
+                <span>胜利等级</span>
+                <strong id="victoryGrade">S</strong>
+              </div>
+            </div>
+
+            <div id="summaryList" class="summary-list"></div>
+          </div>
+
+          <div class="victory-phase phase-finale">
+            <p id="encourageText" class="encourage">你拿下了今天！GOGOGO!</p>
+            <button id="backHomeBtn" class="btn btn-secondary">明天继续</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div id="assetOverlay" class="asset-overlay" aria-hidden="true">
+      <div class="asset-backdrop"></div>
+      <div id="assetBurst" class="asset-burst">
+        <img id="assetGif" alt="" />
+        <div id="assetFallback" class="asset-fallback"></div>
+      </div>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
